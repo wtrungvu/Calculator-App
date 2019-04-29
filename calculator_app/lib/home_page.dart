@@ -6,6 +6,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _controllerNumberOne = TextEditingController();
+  final _controllerNumberTwo = TextEditingController();
+  final _controllerResult = TextEditingController();
+  bool _validateNumberOne = false;
+  bool _validateNumberTwo = false;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the Widget is removed from the Widget tree
+    _controllerNumberOne.dispose();
+    _controllerNumberTwo.dispose();
+    _controllerResult.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +43,12 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
                   child: new TextField(
+                    controller: _controllerNumberOne,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
                     decoration: new InputDecoration(
+                      errorText:
+                          _validateNumberOne ? 'Value Number One Can\'t Be Empty!' : null,
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(10.0),
@@ -47,9 +65,12 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
                   child: new TextField(
+                    controller: _controllerNumberTwo,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
                     decoration: new InputDecoration(
+                      errorText:
+                          _validateNumberTwo ? 'Value Number Two Can\'t Be Empty!' : null,
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(10.0),
@@ -78,7 +99,11 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.red,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            _logicCalculations('+');
+                          });
+                        },
                       ),
                       new RaisedButton(
                         padding: const EdgeInsets.all(10.0),
@@ -90,7 +115,11 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.green,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            _logicCalculations('-');
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -110,7 +139,11 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.blue,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            _logicCalculations('*');
+                          });
+                        },
                       ),
                       new RaisedButton(
                         padding: const EdgeInsets.all(10.0),
@@ -122,7 +155,11 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.purple,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            _logicCalculations('/');
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -130,6 +167,7 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
                   child: new TextField(
+                    controller: _controllerResult,
                     keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
                       border: new OutlineInputBorder(
@@ -164,5 +202,47 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void _logicCalculations(var operation) {
+    if (operation == "+" ||
+        operation == "-" ||
+        operation == "*" ||
+        operation == "/") {
+      _controllerResult.text = '';
+      if (_controllerNumberOne.text.isEmpty &&
+          _controllerNumberTwo.text.isEmpty) {
+        _validateNumberOne = true;
+        _validateNumberTwo = true;
+      } else {
+        if (_controllerNumberOne.text.isEmpty) {
+          _validateNumberOne = true;
+          _validateNumberTwo = false;
+        } else if (_controllerNumberTwo.text.isEmpty) {
+          _validateNumberOne = false;
+          _validateNumberTwo = true;
+        } else {
+          _validateNumberOne = false;
+          _validateNumberTwo = false;
+          var _numberOne = double.parse(_controllerNumberOne.text);
+          var _numberTwo = double.parse(_controllerNumberTwo.text);
+          var _result;
+          if (operation == "+") {
+            _result = _numberOne + _numberTwo;
+          } else if (operation == "-") {
+            _result = _numberOne - _numberTwo;
+          } else if (operation == "*") {
+            _result = _numberOne * _numberTwo;
+          } else if (operation == "/") {
+            _result = _numberOne / _numberTwo;
+          }
+          setState(() {
+            _controllerResult.text = _result.toString();
+          });
+        }
+      }
+    } else {
+      print("_logicCalculations(): Can't find the operation!");
+    }
   }
 }
