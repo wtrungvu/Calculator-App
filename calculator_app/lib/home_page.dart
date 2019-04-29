@@ -47,17 +47,21 @@ class _HomePageState extends State<HomePage> {
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
                     decoration: new InputDecoration(
-                      errorText:
-                          _validateNumberOne ? 'Value Number One Can\'t Be Empty!' : null,
+                      errorText: _validateNumberOne
+                          ? 'Value Number One Can\'t Be Empty!'
+                          : null,
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(10.0),
                         ),
                       ),
                       labelText: "Enter Number One",
+                      hintText: "Enter Number One",
                       suffixIcon: IconButton(
                         icon: Icon(Icons.clear),
-                        onPressed: () {},
+                        onPressed: () {
+                          _controllerNumberOne.clear();
+                        },
                       ),
                     ),
                   ),
@@ -69,17 +73,21 @@ class _HomePageState extends State<HomePage> {
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.done,
                     decoration: new InputDecoration(
-                      errorText:
-                          _validateNumberTwo ? 'Value Number Two Can\'t Be Empty!' : null,
+                      errorText: _validateNumberTwo
+                          ? 'Value Number Two Can\'t Be Empty!'
+                          : null,
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(10.0),
                         ),
                       ),
                       labelText: "Enter Number Two",
+                      hintText: "Enter Number Two",
                       suffixIcon: IconButton(
                         icon: Icon(Icons.clear),
-                        onPressed: () {},
+                        onPressed: () {
+                          _controllerNumberTwo.clear();
+                        },
                       ),
                     ),
                   ),
@@ -167,6 +175,9 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 20.0),
                   child: new TextField(
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                    },
                     controller: _controllerResult,
                     keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
@@ -176,6 +187,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       labelText: "Result Will Show Here",
+                      hintText: "Result Will Show Here",
                     ),
                   ),
                 ),
@@ -193,7 +205,9 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.orange,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          resetAll();
+                        },
                       ),
                     ))
               ],
@@ -234,7 +248,11 @@ class _HomePageState extends State<HomePage> {
           } else if (operation == "*") {
             _result = _numberOne * _numberTwo;
           } else if (operation == "/") {
-            _result = _numberOne / _numberTwo;
+            if (_numberTwo == 0) {
+              _result = "Not a number";
+            } else {
+              _result = _numberOne / _numberTwo;
+            }
           }
           setState(() {
             _controllerResult.text = _result.toString();
@@ -244,5 +262,11 @@ class _HomePageState extends State<HomePage> {
     } else {
       print("_logicCalculations(): Can't find the operation!");
     }
+  }
+
+  void resetAll() {
+    _controllerNumberOne.clear();
+    _controllerNumberTwo.clear();
+    _controllerResult.clear();
   }
 }
