@@ -1,4 +1,4 @@
 # Calculator-App
 Flutter Build a Calculator App For Android &amp; iOS
 
-<img src="Screenshot-iOS.png">
+<img src="Screenshot-iOS.png" width="300">
